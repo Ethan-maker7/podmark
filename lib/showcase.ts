@@ -944,14 +944,8 @@ export const showcaseLearningItems: StoredLearningItem[] = [
 export const showcaseLearningNotes: StoredLearningNote[] = [
   {
     "id": "demo-note-1",
-    "time": "17:38",
-    "text": "这里很适合展示 PodMark 的核心价值：不是只收藏一句话，而是把触动自己的段落留下来，之后能回到音频和上下文。",
-    "createdAt": "2026-06-01T00:00:00.000Z"
-  },
-  {
-    "id": "demo-note-2",
-    "time": "1:06:53",
-    "text": "“主动的希望”可以作为这期的学习标签，适合后续做主题回看。",
+    "time": "00:00",
+    "text": "乐观主义不是逃避痛苦，也不是假装问题不存在，而是在看见现实的复杂之后，仍然不放弃生活的可能性。春天之所以重要，或许正因为它提醒我们：即使寒冷没有完全结束，新的东西也可以慢慢生长。",
     "createdAt": "2026-06-01T00:00:00.000Z"
   }
 ];

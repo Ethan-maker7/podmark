@@ -305,7 +305,7 @@ export default function PodcastReaderPage() {
   const activeSpeakerNames = aiGuide?.speakerNames ?? (isShowcaseEpisode ? showcaseGuide.speakerNames : undefined);
   const sortedHighlights = sortLearningItemsByTime(learningItems.filter((item) => item.type === "highlight"));
   const sortedTags = sortLearningItemsByTime(learningItems.filter((item) => item.type === "tag"));
-  const sortedNotes = sortLearningNotesByTime(learningNotes);
+  const sortedNotes = sortLearningNotesByCreatedAt(learningNotes);
   const progress = audioDuration > 0 ? Math.min((currentTime / audioDuration) * 100, 100) : audioUrl ? 0 : 32;
   const thumbProgress = Math.min(Math.max(progress, 2), 98);
   const protectedNavProps = aiGuideStatus === "loading" ? { target: "_blank", rel: "noopener noreferrer" } : {};
@@ -527,13 +527,13 @@ export default function PodcastReaderPage() {
     if (!text) return;
 
     setLearningNotes((notes) => [
+      ...notes,
       {
         id: `note-${Date.now()}`,
         time: formatPlayerTime(currentTime),
         text,
         createdAt: new Date().toISOString(),
       },
-      ...notes,
     ]);
     setNoteDraft("");
   }
@@ -986,8 +986,7 @@ export default function PodcastReaderPage() {
           <div className="learning-record-list note-record-list">
             {sortedNotes.length ? (
               sortedNotes.map((note) => (
-                <button key={note.id} type="button" onClick={() => jumpToTime(note.time)}>
-                  <span>{note.time}</span>
+                <button key={note.id} type="button">
                   {note.text}
                 </button>
               ))
@@ -1070,15 +1069,6 @@ export default function PodcastReaderPage() {
                   sortedNotes.map((note) => (
                     <article key={note.id}>
                       <div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setLearningFullOpen(false);
-                            jumpToTime(note.time);
-                          }}
-                        >
-                          {note.time}
-                        </button>
                         <button type="button" onClick={() => removeEpisodeNote(note.id)}>
                           删除
                         </button>
@@ -1320,8 +1310,12 @@ function sortLearningItemsByTime(items: LearningItem[]) {
   return [...items].sort((a, b) => timeToSeconds(a.time) - timeToSeconds(b.time));
 }
 
-function sortLearningNotesByTime(notes: LearningNote[]) {
-  return [...notes].sort((a, b) => timeToSeconds(a.time) - timeToSeconds(b.time));
+function sortLearningNotesByCreatedAt(notes: LearningNote[]) {
+  return [...notes].sort((a, b) => {
+    const left = Date.parse(a.createdAt);
+    const right = Date.parse(b.createdAt);
+    return (Number.isNaN(left) ? 0 : left) - (Number.isNaN(right) ? 0 : right);
+  });
 }
 
 function timeToSeconds(value: string) {
