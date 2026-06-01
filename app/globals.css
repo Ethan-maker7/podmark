@@ -2171,17 +2171,17 @@ button {
 }
 
 .note-full-list article {
+  position: relative;
   border: 1px solid rgba(142, 99, 181, 0.12);
   border-radius: 16px;
-  padding: 13px 15px;
+  padding: 17px 56px 17px 17px;
   background: rgba(255, 253, 252, 0.72);
 }
 
 .note-full-list article > div {
-  display: flex;
-  gap: 8px;
-  justify-content: space-between;
-  margin-bottom: 8px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
 }
 
 .note-full-list article button {
@@ -2644,6 +2644,66 @@ button {
   color: #9f3e55;
   border-color: rgba(159, 62, 85, 0.25);
   background: rgba(255, 244, 247, 0.86);
+}
+
+.library-delete-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(41, 34, 29, 0.18);
+  backdrop-filter: blur(12px);
+}
+
+.library-delete-dialog {
+  width: min(440px, 100%);
+  padding: 30px;
+}
+
+.library-delete-dialog h2 {
+  margin: 0 0 10px;
+  font-family: Literata, serif;
+  font-size: 28px;
+  color: #201a17;
+}
+
+.library-delete-dialog p {
+  margin: 0 0 14px;
+  color: #71645b;
+  line-height: 1.7;
+}
+
+.library-delete-dialog strong {
+  display: block;
+  margin-bottom: 22px;
+  color: #2c241f;
+  line-height: 1.45;
+}
+
+.library-delete-dialog div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.library-delete-dialog button {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 17px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.library-delete-dialog button:first-child {
+  color: #5f5650;
+  background: rgba(245, 238, 229, 0.9);
+}
+
+.library-delete-dialog button:last-child {
+  color: #fff;
+  background: #8b3f5a;
 }
 
 .library-empty {

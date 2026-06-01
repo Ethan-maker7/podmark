@@ -3,10 +3,17 @@
 import Link from "next/link";
 import { BookOpen, Clock3, Edit3, StickyNote, Tag, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { LIBRARY_STORAGE_KEY, type LibraryEntry } from "@/lib/parsed-episode";
+import {
+  ARTICLE_STORAGE_PREFIX,
+  LEARNING_STORAGE_PREFIX,
+  LIBRARY_STORAGE_KEY,
+  RECENT_READING_EPISODE_KEY,
+  type LibraryEntry,
+} from "@/lib/parsed-episode";
 
 export default function LibraryPage() {
   const [entries, setEntries] = useState<LibraryEntry[]>([]);
+  const [pendingDelete, setPendingDelete] = useState<LibraryEntry | null>(null);
 
   useEffect(() => {
     const raw = window.localStorage.getItem(LIBRARY_STORAGE_KEY);
@@ -24,6 +31,12 @@ export default function LibraryPage() {
     const next = entries.filter((entry) => entry.episodeId !== episodeId);
     setEntries(next);
     window.localStorage.setItem(LIBRARY_STORAGE_KEY, JSON.stringify(next));
+    window.localStorage.removeItem(`${ARTICLE_STORAGE_PREFIX}${episodeId}`);
+    window.localStorage.removeItem(`${LEARNING_STORAGE_PREFIX}${episodeId}`);
+    if (window.localStorage.getItem(RECENT_READING_EPISODE_KEY) === episodeId) {
+      window.localStorage.removeItem(RECENT_READING_EPISODE_KEY);
+    }
+    setPendingDelete(null);
   }
 
   return (
@@ -93,7 +106,7 @@ export default function LibraryPage() {
                 <button
                   aria-label="删除文章"
                   className="library-delete-button"
-                  onClick={() => deleteEntry(entry.episodeId)}
+                  onClick={() => setPendingDelete(entry)}
                   type="button"
                 >
                   <Trash2 size={17} />
@@ -109,6 +122,30 @@ export default function LibraryPage() {
           </div>
         )}
       </section>
+
+      {pendingDelete ? (
+        <div className="library-delete-backdrop" role="presentation" onMouseDown={() => setPendingDelete(null)}>
+          <div
+            className="library-delete-dialog glass-card-v3"
+            role="dialog"
+            aria-modal="true"
+            aria-label="确认删除文章"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <h2>删除这篇文章？</h2>
+            <p>删除后会同时移除逐字稿、划线、标签和笔记。这个操作不能撤销。</p>
+            <strong>{pendingDelete.title}</strong>
+            <div>
+              <button type="button" onClick={() => setPendingDelete(null)}>
+                取消
+              </button>
+              <button type="button" onClick={() => deleteEntry(pendingDelete.episodeId)}>
+                删除
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
