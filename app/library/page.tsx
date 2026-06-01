@@ -4,8 +4,9 @@ import Link from "next/link";
 import { BookOpen, Clock3, Edit3, StickyNote, Tag, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { LIBRARY_STORAGE_KEY, type LibraryEntry } from "@/lib/parsed-episode";
+import { SHOWCASE_EPISODE_ID } from "@/lib/showcase";
 
-const showcaseEpisodeId = "67da42804e49c8b550d41545";
+const showcaseEpisodeId = SHOWCASE_EPISODE_ID;
 
 export default function LibraryPage() {
   const [entries, setEntries] = useState<LibraryEntry[]>([]);

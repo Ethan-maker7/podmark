@@ -5,10 +5,10 @@ import { ArrowRight, BookOpen, Link2, Mic, PencilLine, Sparkles } from "lucide-r
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { mockPodcast } from "@/lib/mock-data";
-import { AUTO_GENERATE_ARTICLE_KEY, LAST_PARSED_EPISODE_KEY, LIBRARY_STORAGE_KEY, type LibraryEntry, type ParsedEpisode } from "@/lib/parsed-episode";
+import { AUTO_GENERATE_ARTICLE_KEY, LAST_PARSED_EPISODE_KEY, type ParsedEpisode } from "@/lib/parsed-episode";
+import { SHOWCASE_EPISODE_ID } from "@/lib/showcase";
 
-const showcaseEpisodeId = "67da42804e49c8b550d41545";
-const showcaseTitleKeyword = "在春天，保持希望和乐观主义";
+const showcaseEpisodeId = SHOWCASE_EPISODE_ID;
 
 type ParseState =
   | { status: "idle" }
@@ -77,17 +77,7 @@ export default function HomePage() {
   function enterShowcaseEpisode() {
     window.sessionStorage.removeItem(LAST_PARSED_EPISODE_KEY);
     window.sessionStorage.removeItem(AUTO_GENERATE_ARTICLE_KEY);
-    router.push(`/podcasts/${findShowcaseEpisodeId()}`);
-  }
-
-  function findShowcaseEpisodeId() {
-    try {
-      const raw = window.localStorage.getItem(LIBRARY_STORAGE_KEY);
-      const entries = raw ? (JSON.parse(raw) as LibraryEntry[]) : [];
-      return entries.find((entry) => entry.title?.includes(showcaseTitleKeyword))?.episodeId ?? showcaseEpisodeId;
-    } catch {
-      return showcaseEpisodeId;
-    }
+    router.push(`/podcasts/${showcaseEpisodeId}`);
   }
 
   return (

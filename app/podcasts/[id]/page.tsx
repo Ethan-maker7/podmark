@@ -27,8 +27,9 @@ import {
   type StoredLearning,
   type StoredLearningNote,
 } from "@/lib/parsed-episode";
+import { SHOWCASE_EPISODE_ID, showcaseEpisode, showcaseGuide, showcaseTranscriptSections } from "@/lib/showcase";
 
-const showcaseEpisodeId = "67da42804e49c8b550d41545";
+const showcaseEpisodeId = SHOWCASE_EPISODE_ID;
 
 const outlineItems = [
   {
@@ -252,8 +253,9 @@ export default function PodcastReaderPage() {
   });
 
   const routeEpisodeId = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  const isShowcaseEpisode = routeEpisodeId === showcaseEpisodeId;
   const parsedEpisodeForRoute = !routeEpisodeId || parsedEpisode?.episodeId === routeEpisodeId ? parsedEpisode : null;
-  const effectiveEpisode = parsedEpisodeForRoute ?? storedEpisode;
+  const effectiveEpisode = isShowcaseEpisode ? showcaseEpisode : parsedEpisodeForRoute ?? storedEpisode;
   const episodeTitle = effectiveEpisode?.title ?? "沉思录：在数字化荒野中寻找宁静";
   const podcastName = effectiveEpisode?.podcastName ?? "哲学与人生";
   const coverUrl =
@@ -262,26 +264,36 @@ export default function PodcastReaderPage() {
   const duration = effectiveEpisode?.duration ?? "56:12";
   const episodeCode = effectiveEpisode?.episodeId ? "已解析" : "EP.42";
   const audioUrl = effectiveEpisode?.audioUrl ?? null;
-  const isParsedEpisode = Boolean(effectiveEpisode?.episodeId);
+  const isParsedEpisode = Boolean(effectiveEpisode?.episodeId) && !isShowcaseEpisode;
   const episodeStorageId = effectiveEpisode?.episodeId ?? routeEpisodeId ?? "demo-product-thinking";
-  const visibleTranscriptSections = generatedTranscript ?? (isParsedEpisode ? [] : randomWaveTranscriptSections);
+  const visibleTranscriptSections: TranscriptSection[] =
+    generatedTranscript ??
+    (isShowcaseEpisode
+      ? showcaseTranscriptSections.map((section) => ({ ...section }))
+      : isParsedEpisode
+      ? []
+      : randomWaveTranscriptSections);
   const activeSummary =
     aiGuide?.summary ??
     (aiGuideStatus === "loading"
       ? visibleTranscriptSections.length
         ? "逐字稿已生成，正在整理摘要、大纲与金句，请稍等……"
         : "音频信息已获取。PodMark 正在生成逐字稿，请稍等……"
+      : isShowcaseEpisode
+      ? showcaseGuide.summary
       : isParsedEpisode
       ? "音频信息已获取"
       : "这一期讨论了在信息过载和算法推荐中，如何通过主动整理、标注和复看，重新建立自己的注意力秩序。播客不只是被听完的内容，也可以成为长期沉淀的学习材料。");
   const activeOutline = (
     aiGuide?.outline ??
-    (isParsedEpisode
+    (isShowcaseEpisode
+      ? showcaseGuide.outline
+      : isParsedEpisode
       ? []
       : outlineItems.map((item) => ({ ...item, startTime: item.time.split("-")[0].trim(), endTime: item.time.split("-")[1]?.trim() || item.time })))
   ).filter((item) => item.title?.trim() && item.summary?.trim());
   const activeQuotes =
-    (aiGuide?.quotes ?? (isParsedEpisode ? [] : quotes.map((quote) => ({ ...quote, startTime: quote.time, endTime: quote.time })))).slice(0, 3);
+    (aiGuide?.quotes ?? (isShowcaseEpisode ? showcaseGuide.quotes : isParsedEpisode ? [] : quotes.map((quote) => ({ ...quote, startTime: quote.time, endTime: quote.time })))).slice(0, 3);
   const sortedHighlights = sortLearningItemsByTime(learningItems.filter((item) => item.type === "highlight"));
   const sortedTags = sortLearningItemsByTime(learningItems.filter((item) => item.type === "tag"));
   const sortedNotes = sortLearningNotesByTime(learningNotes);
