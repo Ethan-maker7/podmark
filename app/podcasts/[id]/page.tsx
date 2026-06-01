@@ -27,7 +27,14 @@ import {
   type StoredLearning,
   type StoredLearningNote,
 } from "@/lib/parsed-episode";
-import { SHOWCASE_EPISODE_ID, showcaseEpisode, showcaseGuide, showcaseTranscriptSections } from "@/lib/showcase";
+import {
+  SHOWCASE_EPISODE_ID,
+  showcaseEpisode,
+  showcaseGuide,
+  showcaseLearningItems,
+  showcaseLearningNotes,
+  showcaseTranscriptSections,
+} from "@/lib/showcase";
 
 const showcaseEpisodeId = SHOWCASE_EPISODE_ID;
 
@@ -294,6 +301,7 @@ export default function PodcastReaderPage() {
   ).filter((item) => item.title?.trim() && item.summary?.trim());
   const activeQuotes =
     (aiGuide?.quotes ?? (isShowcaseEpisode ? showcaseGuide.quotes : isParsedEpisode ? [] : quotes.map((quote) => ({ ...quote, startTime: quote.time, endTime: quote.time })))).slice(0, 3);
+  const activeSpeakerNames = aiGuide?.speakerNames ?? (isShowcaseEpisode ? showcaseGuide.speakerNames : undefined);
   const sortedHighlights = sortLearningItemsByTime(learningItems.filter((item) => item.type === "highlight"));
   const sortedTags = sortLearningItemsByTime(learningItems.filter((item) => item.type === "tag"));
   const sortedNotes = sortLearningNotesByTime(learningNotes);
@@ -312,6 +320,11 @@ export default function PodcastReaderPage() {
       setGeneratedTranscript(null);
       setAiGuide(null);
       setAiGuideStatus("idle");
+    } else if (isShowcaseEpisode) {
+      setStoredEpisode(null);
+      setGeneratedTranscript(null);
+      setAiGuide(null);
+      setAiGuideStatus("ready");
     } else {
     const articleJson = window.localStorage.getItem(`${ARTICLE_STORAGE_PREFIX}${episodeStorageId}`);
     if (articleJson) {
@@ -328,8 +341,8 @@ export default function PodcastReaderPage() {
     }
 
     const learningJson = window.localStorage.getItem(`${LEARNING_STORAGE_PREFIX}${episodeStorageId}`);
-    setLearningItems([]);
-    setLearningNotes([]);
+    setLearningItems(isShowcaseEpisode ? showcaseLearningItems : []);
+    setLearningNotes(isShowcaseEpisode ? showcaseLearningNotes : []);
     if (learningJson) {
       try {
         const stored = JSON.parse(learningJson) as StoredLearning;
@@ -343,7 +356,7 @@ export default function PodcastReaderPage() {
       }
     }
     setLearningLoaded(true);
-  }, [episodeStorageId]);
+  }, [episodeStorageId, isShowcaseEpisode]);
 
   useEffect(() => {
     if (typeof window === "undefined" || !learningLoaded) return;
@@ -790,7 +803,7 @@ export default function PodcastReaderPage() {
                 </button>
               ) : null}
               <p>
-                {showSpeakers ? <span className="speaker-inline">{displaySpeakerName(section.speaker, aiGuide?.speakerNames)}</span> : null}
+                {showSpeakers ? <span className="speaker-inline">{displaySpeakerName(section.speaker, activeSpeakerNames)}</span> : null}
                 {renderAnnotatedText(
                   section.text,
                   section.time,
