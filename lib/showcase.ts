@@ -895,30 +895,49 @@ export const showcaseTranscriptSections: StoredTranscriptSection[] = [
 
 export const showcaseLearningItems: StoredLearningItem[] = [
   {
+    "id": "demo-highlight-12-06",
+    "type": "highlight",
+    "time": "12:06",
+    "text": "就是学到很多东西，就是我们其实可以把呃一种之前空间上的共同的栖居，转化成一种心理上的共同的支持。就是如何能遥远的作伴，然后如何能遥远的支持跟祝福彼此。"
+  },
+  {
+    "id": "demo-highlight-12-50",
+    "type": "highlight",
+    "time": "12:50",
+    "text": "如果我们将乐观定义为促使个体从自身抽离，投身周遭世界，从而接近美好事物的一种力量的话。那么所有的依恋，就是 attachment，就是主体对于一个对象的依恋，都是乐观的。"
+  },
+  {
+    "id": "demo-tag-12-50",
+    "type": "tag",
+    "time": "12:50",
+    "text": "如果我们将乐观定义为促使个体从自身抽离，投身周遭世界，从而接近美好事物的一种力量的话。",
+    "tag": "全心全意地祝福别人是主体性的体现"
+  },
+  {
     "id": "demo-highlight-17-38",
     "type": "highlight",
     "time": "17:38",
-    "text": "我觉得我是在30多岁之后才学会这件事情，就是这个英文里叫 let them have their moments。"
+    "text": "但是我觉得它是很真实的，也不是我们的错，是因为我们在成长的过程中，我们在这个个人主义的社会里面，我们就会被教育说：“哦，你应该追求你自己的一种成功或者成长。”嗯，然后我觉得我是在30多岁之后才学会这件事情，就是这个英文里叫 let them have their moments。"
   },
   {
     "id": "demo-tag-17-38",
     "type": "tag",
     "time": "17:38",
-    "text": "这个是别人的时刻。",
-    "tag": "主体间性"
+    "text": "let them have their moments。",
+    "tag": "别人的时刻"
   },
   {
-    "id": "demo-highlight-36-13",
+    "id": "demo-highlight-34-39",
     "type": "highlight",
-    "time": "36:13",
-    "text": "我们的身体其实。还是在回应这些刺激，但是这些刺激又没有被形成意义和叙事。"
+    "time": "34:39",
+    "text": "对于美好的生活追求，或者说现在的牺牲是为了未来的幸福的这种叙事和对生活整体的这种解释的系统，它坍塌和失灵的时候，个体就不会再通过当下对我发生的事情意味着什么来理解我的遭遇，而是会通过这件事情对我有什么切实的结果来感受这个世界。"
   },
   {
-    "id": "demo-tag-66-53",
+    "id": "demo-tag-34-39",
     "type": "tag",
-    "time": "1:06:53",
-    "text": "主动的希望不仅是一种感觉，它还是一种实践。",
-    "tag": "希望工具包"
+    "time": "34:39",
+    "text": "对于美好的生活追求，或者说现在的牺牲是为了未来的幸福的这种叙事和对生活整体的这种解释的系统",
+    "tag": "幸福与当下相关"
   }
 ];
 

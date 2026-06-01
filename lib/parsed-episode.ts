@@ -3,6 +3,7 @@ export const AUTO_GENERATE_ARTICLE_KEY = "podmark:autoGenerateArticle";
 export const ARTICLE_STORAGE_PREFIX = "podmark:article:";
 export const LEARNING_STORAGE_PREFIX = "podmark:learning:";
 export const LIBRARY_STORAGE_KEY = "podmark:library";
+export const RECENT_READING_EPISODE_KEY = "podmark:recentReadingEpisode";
 
 export type ParsedEpisode = {
   sourceUrl?: string;

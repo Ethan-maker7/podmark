@@ -21,6 +21,7 @@ import {
   LAST_PARSED_EPISODE_KEY,
   LEARNING_STORAGE_PREFIX,
   LIBRARY_STORAGE_KEY,
+  RECENT_READING_EPISODE_KEY,
   type LibraryEntry,
   type ParsedEpisode,
   type StoredArticle,
@@ -343,7 +344,7 @@ export default function PodcastReaderPage() {
     const learningJson = window.localStorage.getItem(`${LEARNING_STORAGE_PREFIX}${episodeStorageId}`);
     setLearningItems(isShowcaseEpisode ? showcaseLearningItems : []);
     setLearningNotes(isShowcaseEpisode ? showcaseLearningNotes : []);
-    if (learningJson) {
+    if (learningJson && !isShowcaseEpisode) {
       try {
         const stored = JSON.parse(learningJson) as StoredLearning;
         setLearningItems(stored.items ?? []);
@@ -362,6 +363,13 @@ export default function PodcastReaderPage() {
     if (typeof window === "undefined" || !learningLoaded) return;
     saveLearningState();
   }, [learningItems, learningNotes, learningLoaded]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || isShowcaseEpisode || !episodeStorageId) return;
+    if (isParsedEpisode || storedEpisode || generatedTranscript?.length) {
+      window.localStorage.setItem(RECENT_READING_EPISODE_KEY, episodeStorageId);
+    }
+  }, [episodeStorageId, generatedTranscript, isParsedEpisode, isShowcaseEpisode, storedEpisode]);
 
   useEffect(() => {
     if (typeof window === "undefined" || !isParsedEpisode || !audioUrl || aiGuideStatus !== "idle") return;
@@ -668,11 +676,15 @@ export default function PodcastReaderPage() {
       updatedAt: new Date().toISOString(),
     };
     window.localStorage.setItem(`${ARTICLE_STORAGE_PREFIX}${episodeStorageId}`, JSON.stringify(stored));
+    if (!isShowcaseEpisode) {
+      window.localStorage.setItem(RECENT_READING_EPISODE_KEY, episodeStorageId);
+    }
     if (guide) saveToLibrary(guide.summary);
   }
 
   function saveLearningState() {
     if (typeof window === "undefined") return;
+    if (isShowcaseEpisode) return;
 
     const stored: StoredLearning = {
       episodeId: episodeStorageId,
@@ -681,6 +693,7 @@ export default function PodcastReaderPage() {
       updatedAt: new Date().toISOString(),
     };
     window.localStorage.setItem(`${LEARNING_STORAGE_PREFIX}${episodeStorageId}`, JSON.stringify(stored));
+    window.localStorage.setItem(RECENT_READING_EPISODE_KEY, episodeStorageId);
     if (aiGuide && visibleTranscriptSections.length && audioUrl) {
       saveToLibrary(aiGuide?.summary);
     }
@@ -688,6 +701,7 @@ export default function PodcastReaderPage() {
 
   function saveToLibrary(summary = aiGuide?.summary) {
     if (typeof window === "undefined") return;
+    if (isShowcaseEpisode) return;
 
     const currentJson = window.localStorage.getItem(LIBRARY_STORAGE_KEY);
     let current: LibraryEntry[] = [];
@@ -722,7 +736,7 @@ export default function PodcastReaderPage() {
         </Link>
         <nav>
           <Link href="/" {...protectedNavProps}>首页</Link>
-          <Link className="active" href={`/podcasts/${showcaseEpisodeId}`}>
+          <Link className={isShowcaseEpisode ? undefined : "active"} href="/reading">
             正在阅读
           </Link>
           <Link href="/library" {...protectedNavProps}>学习库</Link>
@@ -819,7 +833,7 @@ export default function PodcastReaderPage() {
               <p>
                 {aiGuideStatus === "loading"
                   ? "PodMark 会先生成逐字稿，再整理摘要、大纲与金句，请稍等……"
-                  : "正在等待生成博客文章。"}
+                  : "正在等待生成文章。"}
               </p>
               {aiGuideStatus === "loading" ? <i className="generation-spinner" aria-label="正在生成中" /> : null}
             </section>

@@ -4,9 +4,6 @@ import Link from "next/link";
 import { BookOpen, Clock3, Edit3, StickyNote, Tag, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { LIBRARY_STORAGE_KEY, type LibraryEntry } from "@/lib/parsed-episode";
-import { SHOWCASE_EPISODE_ID } from "@/lib/showcase";
-
-const showcaseEpisodeId = SHOWCASE_EPISODE_ID;
 
 export default function LibraryPage() {
   const [entries, setEntries] = useState<LibraryEntry[]>([]);
@@ -37,7 +34,7 @@ export default function LibraryPage() {
         </Link>
         <nav>
           <Link href="/">首页</Link>
-          <Link href={`/podcasts/${showcaseEpisodeId}`}>正在阅读</Link>
+          <Link href="/reading">正在阅读</Link>
           <Link className="active" href="/library">
             学习库
           </Link>
@@ -46,7 +43,7 @@ export default function LibraryPage() {
 
       <section className="library-hero-v3">
         <h1>学习库</h1>
-        <p>自动保存已经生成逐字稿和 AI 导读的播客文章。</p>
+        <p>自动保存已经生成逐字稿和 AI 导读的文章。</p>
       </section>
 
       <section className="library-section-v3 collection-area">
@@ -71,7 +68,7 @@ export default function LibraryPage() {
                     <span>{entry.podcastName ?? "播客"}</span>
                     <h3>{entry.title ?? "未命名单集"}</h3>
                     <p className="library-article-summary">
-                      {entry.summary || "这篇播客文章还没有生成摘要。"}
+                      {entry.summary || "这篇文章还没有生成摘要。"}
                     </p>
                     <p className="library-article-duration">
                       <Clock3 size={14} />
@@ -107,7 +104,7 @@ export default function LibraryPage() {
         ) : (
           <div className="library-empty glass-card-v3">
             <BookOpen size={24} />
-            <h3>还没有保存的播客文章</h3>
+            <h3>还没有保存的文章</h3>
             <p>生成完成逐字稿和 AI 导读后，文章会自动出现在这里。</p>
           </div>
         )}

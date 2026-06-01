@@ -2202,6 +2202,58 @@ button {
   line-height: 1.72;
 }
 
+.reader-empty-shell {
+  max-width: 760px;
+  margin: 110px auto 0;
+  padding: 46px;
+  text-align: center;
+}
+
+.reader-empty-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  margin-bottom: 18px;
+  color: #6b3f8f;
+  background: rgba(217, 183, 244, 0.2);
+}
+
+.reader-empty-shell h1 {
+  margin: 0 0 12px;
+  font-family: Literata, serif;
+  font-size: 34px;
+  line-height: 1.18;
+  color: #201a17;
+}
+
+.reader-empty-shell p {
+  max-width: 520px;
+  margin: 0 auto;
+  color: #71645b;
+  font-size: 17px;
+  line-height: 1.78;
+}
+
+.reader-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 26px;
+}
+
+.reader-empty-actions a {
+  border: 1px solid rgba(112, 71, 144, 0.18);
+  border-radius: 999px;
+  padding: 11px 18px;
+  color: #4a2d5f;
+  background: rgba(255, 253, 252, 0.78);
+  font-weight: 900;
+  text-decoration: none;
+}
+
 .library-v3 {
   padding-bottom: 88px;
   background:

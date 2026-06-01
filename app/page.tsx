@@ -5,7 +5,7 @@ import { ArrowRight, BookOpen, Link2, Mic, PencilLine, Sparkles } from "lucide-r
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { mockPodcast } from "@/lib/mock-data";
-import { AUTO_GENERATE_ARTICLE_KEY, LAST_PARSED_EPISODE_KEY, type ParsedEpisode } from "@/lib/parsed-episode";
+import { AUTO_GENERATE_ARTICLE_KEY, LAST_PARSED_EPISODE_KEY, RECENT_READING_EPISODE_KEY, type ParsedEpisode } from "@/lib/parsed-episode";
 import { SHOWCASE_EPISODE_ID } from "@/lib/showcase";
 
 const showcaseEpisodeId = SHOWCASE_EPISODE_ID;
@@ -68,6 +68,9 @@ export default function HomePage() {
 
   function enterLearningPage(episode: ParsedEpisode, autoGenerate = false) {
     window.sessionStorage.setItem(LAST_PARSED_EPISODE_KEY, JSON.stringify(episode));
+    if (episode.episodeId) {
+      window.localStorage.setItem(RECENT_READING_EPISODE_KEY, episode.episodeId);
+    }
     if (autoGenerate) {
       window.sessionStorage.setItem(AUTO_GENERATE_ARTICLE_KEY, "1");
     }
@@ -93,9 +96,9 @@ export default function HomePage() {
           <Link className="active" href="/">
             首页
           </Link>
-          <button className="nav-link-button" type="button" onClick={enterShowcaseEpisode}>
+          <Link href="/reading">
             正在阅读
-          </button>
+          </Link>
           <Link href="/library">学习库</Link>
         </nav>
         <span className="nav-spacer" />
@@ -111,7 +114,7 @@ export default function HomePage() {
           <br />
           <span>worth remembering.</span>
         </h1>
-        <p>把一集播客整理成可以阅读、标注和收藏的播客文章。</p>
+        <p>把一集播客整理成可以阅读、标注和收藏的文章。</p>
 
         <div className="url-composer-v3">
           <div className="composer-v3-label">
@@ -139,11 +142,11 @@ export default function HomePage() {
               value={url}
             />
             <button disabled={parseState.status === "loading"} onClick={() => void handleParse()}>
-              {parseState.status === "loading" ? "正在识别" : "一键查找博客"}
+              {parseState.status === "loading" ? "正在识别" : "一键查找播客"}
               <ArrowRight size={16} />
             </button>
           </div>
-          <div className="composer-v3-footnote">无需登录 · 隐私安全 · 即刻转换</div>
+          <div className="composer-v3-footnote">无需登录 · 本地存储 · 即刻转换</div>
         </div>
 
         {parseState.status === "loading" ? (
