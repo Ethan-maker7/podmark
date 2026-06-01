@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+dist
+.env*
+*.log
+.tmp/
+asr-results/
+音频测试/
