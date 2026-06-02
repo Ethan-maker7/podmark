@@ -306,6 +306,11 @@ export default function PodcastReaderPage() {
   const sortedHighlights = sortLearningItemsByTime(learningItems.filter((item) => item.type === "highlight"));
   const sortedTags = sortLearningItemsByTime(learningItems.filter((item) => item.type === "tag"));
   const sortedNotes = sortLearningNotesByCreatedAt(learningNotes);
+  const selectedItems = selectionTools.visible
+    ? learningItems.filter((item) => item.time === selectionTools.time && item.text === selectionTools.text)
+    : [];
+  const selectedHighlight = selectedItems.find((item) => item.type === "highlight");
+  const selectedTag = selectedItems.find((item) => item.type === "tag");
   const progress = audioDuration > 0 ? Math.min((currentTime / audioDuration) * 100, 100) : audioUrl ? 0 : 32;
   const thumbProgress = Math.min(Math.max(progress, 2), 98);
   const protectedNavProps = aiGuideStatus === "loading" ? { target: "_blank", rel: "noopener noreferrer" } : {};
@@ -483,27 +488,28 @@ export default function PodcastReaderPage() {
   function addLearningItem(type: LearningItem["type"], tag?: string) {
     if (!selectionTools.text || !selectionTools.time) return;
 
-    if (selectionTools.itemId) {
-      setLearningItems((items) =>
-        items.map((item) => (item.id === selectionTools.itemId ? { ...item, type: tag ? "tag" : item.type, tag } : item)),
+    setLearningItems((items) => {
+      const existingItem = items.find(
+        (item) => item.type === type && item.time === selectionTools.time && item.text === selectionTools.text,
       );
-      setSelectionTools((current) => ({ ...current, visible: false, text: "", time: "", itemId: "" }));
-      setTagMenuOpen(false);
-      setTagDraft("");
-      setEditingTagId("");
-      return;
-    }
 
-    setLearningItems((items) => [
-      {
-        id: `${Date.now()}-${items.length}`,
-        type,
-        time: selectionTools.time,
-        text: selectionTools.text,
-        tag,
-      },
-      ...items,
-    ]);
+      if (existingItem) {
+        return type === "tag"
+          ? items.map((item) => (item.id === existingItem.id ? { ...item, tag } : item))
+          : items;
+      }
+
+      return [
+        ...items,
+        {
+          id: `${Date.now()}-${items.length}`,
+          type,
+          time: selectionTools.time,
+          text: selectionTools.text,
+          tag,
+        },
+      ];
+    });
     setSelectionTools((current) => ({ ...current, visible: false, text: "", time: "", itemId: "" }));
     setTagMenuOpen(false);
     setTagDraft("");
@@ -572,9 +578,10 @@ export default function PodcastReaderPage() {
     window.getSelection()?.removeAllRanges();
   }
 
-  function removeLearningItem() {
-    if (!selectionTools.itemId) return;
-    setLearningItems((items) => items.filter((item) => item.id !== selectionTools.itemId));
+  function removeLearningItem(targetItemId?: string) {
+    const targetId = targetItemId ?? selectedHighlight?.id ?? selectionTools.itemId;
+    if (!targetId) return;
+    setLearningItems((items) => items.filter((item) => item.id !== targetId));
     setSelectionTools((current) => ({ ...current, visible: false, text: "", time: "", itemId: "" }));
     setTagMenuOpen(false);
     setTagDraft("");
@@ -852,13 +859,24 @@ export default function PodcastReaderPage() {
             <Copy size={15} />
             复制
           </button>
-          <button type="button" onClick={() => (selectionTools.itemId ? removeLearningItem() : addLearningItem("highlight"))}>
+          <button type="button" onClick={() => (selectedHighlight ? removeLearningItem(selectedHighlight.id) : addLearningItem("highlight"))}>
             <Highlighter size={15} />
-            {selectionTools.itemId ? "取消划线" : "划线"}
+            {selectedHighlight ? "取消划线" : "划线"}
           </button>
-          <button type="button" onClick={() => setTagMenuOpen(true)}>
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedTag) {
+                openTagDialog(selectedTag);
+                return;
+              }
+              setTagDraft("");
+              setEditingTagId("");
+              setTagMenuOpen(true);
+            }}
+          >
             <Tags size={15} />
-            标签
+            {selectedTag ? "编辑标签" : "标签"}
           </button>
         </div>
       ) : null}
@@ -942,7 +960,7 @@ export default function PodcastReaderPage() {
         </div>
         <details className="learning-section" open>
           <summary>划线收藏</summary>
-          <div className="learning-record-list">
+          <div className="learning-record-list highlight-record-list">
             {sortedHighlights.length ? (
               sortedHighlights.map((item) => (
                 <button key={item.id} type="button" onClick={() => jumpToTime(item.time)}>
@@ -957,7 +975,7 @@ export default function PodcastReaderPage() {
         </details>
         <details className="learning-section" open>
           <summary>灵感标签</summary>
-          <div className="learning-record-list">
+          <div className="learning-record-list tag-record-list">
             {sortedTags.length ? (
               sortedTags.map((item) => (
                 <button key={item.id} type="button" onClick={() => jumpToTime(item.time)}>
@@ -1009,7 +1027,7 @@ export default function PodcastReaderPage() {
             </div>
             <section>
               <h3>划线收藏</h3>
-              <div className="learning-full-list">
+              <div className="learning-full-list highlight-full-list">
                 {sortedHighlights.length ? (
                   sortedHighlights.map((item) => (
                     <button
@@ -1031,7 +1049,7 @@ export default function PodcastReaderPage() {
             </section>
             <section>
               <h3>灵感标签</h3>
-              <div className="learning-full-list">
+              <div className="learning-full-list tag-full-list">
                 {sortedTags.length ? (
                   sortedTags.map((item) => (
                     <button
@@ -1253,9 +1271,9 @@ function renderAnnotatedText(
         className="learning-tag-text"
         role="button"
         tabIndex={0}
-        onClick={() => onOpenTag(tags[0])}
+        onClick={(event) => onOpenItem(tags[0], event.currentTarget)}
         onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") onOpenTag(tags[0]);
+          if (event.key === "Enter" || event.key === " ") onOpenItem(tags[0], event.currentTarget);
         }}
       >
         {itemGroup.itemText}

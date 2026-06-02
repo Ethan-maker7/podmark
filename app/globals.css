@@ -1580,6 +1580,7 @@ button {
   box-shadow: 0.08em 0 0 rgba(255, 226, 122, 0.5), -0.08em 0 0 rgba(255, 226, 122, 0.5);
   cursor: pointer;
   transition: background 140ms ease, box-shadow 140ms ease;
+  user-select: none;
 }
 
 .transcript-chapter .learning-highlight:hover {
@@ -1600,10 +1601,11 @@ button {
 .learning-tag-text {
   text-decoration-line: underline;
   text-decoration-style: wavy;
-  text-decoration-color: rgba(229, 181, 50, 0.82);
+  text-decoration-color: rgba(88, 176, 129, 0.86);
   text-decoration-thickness: 1.4px;
   text-underline-offset: 0.22em;
   cursor: pointer;
+  user-select: none;
 }
 
 .learning-tag-symbol {
@@ -1611,26 +1613,27 @@ button {
   align-items: center;
   justify-content: center;
   margin: 0 0.18em;
-  border: 1px solid rgba(142, 99, 181, 0.18);
+  border: 1px solid rgba(88, 176, 129, 0.22);
   border-radius: 999px;
   padding: 0.04em 0.22em;
-  color: #8e63b5;
+  color: #2f7a5c;
   background:
-    linear-gradient(180deg, rgba(255, 253, 252, 0.92), rgba(245, 232, 255, 0.78)),
-    rgba(217, 183, 244, 0.24);
+    linear-gradient(180deg, rgba(255, 253, 252, 0.94), rgba(232, 249, 239, 0.82)),
+    rgba(88, 176, 129, 0.12);
   font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
   font-size: 0.82em;
   font-weight: 950;
   line-height: 1.05;
   vertical-align: 0.06em;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(142, 99, 181, 0.14);
+  box-shadow: 0 1px 4px rgba(47, 122, 92, 0.14);
+  user-select: none;
 }
 
 .learning-tag-symbol:hover {
   color: white;
-  border-color: rgba(142, 99, 181, 0.5);
-  background: #8e63b5;
+  border-color: rgba(47, 122, 92, 0.5);
+  background: #2f7a5c;
 }
 
 .selection-toolbar {
@@ -2030,6 +2033,18 @@ button {
   font-weight: 950;
 }
 
+.highlight-record-list span,
+.highlight-full-list span {
+  color: #8a6218;
+  background: rgba(255, 226, 122, 0.42);
+}
+
+.tag-record-list span,
+.tag-full-list span {
+  color: #2f7a5c;
+  background: rgba(88, 176, 129, 0.14);
+}
+
 .note-composer {
   display: grid;
   gap: 8px;
@@ -2168,6 +2183,16 @@ button {
   background: rgba(217, 183, 244, 0.2);
   font-size: 12px;
   font-weight: 950;
+}
+
+.highlight-full-list span {
+  color: #8a6218;
+  background: rgba(255, 226, 122, 0.42);
+}
+
+.tag-full-list span {
+  color: #2f7a5c;
+  background: rgba(88, 176, 129, 0.14);
 }
 
 .note-full-list article {
