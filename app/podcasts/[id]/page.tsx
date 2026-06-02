@@ -942,7 +942,7 @@ export default function PodcastReaderPage() {
         </div>
         <details className="learning-section" open>
           <summary>划线收藏</summary>
-          <div className="learning-record-list">
+          <div className="learning-record-list highlight-record-list">
             {sortedHighlights.length ? (
               sortedHighlights.map((item) => (
                 <button key={item.id} type="button" onClick={() => jumpToTime(item.time)}>
@@ -957,7 +957,7 @@ export default function PodcastReaderPage() {
         </details>
         <details className="learning-section" open>
           <summary>灵感标签</summary>
-          <div className="learning-record-list">
+          <div className="learning-record-list tag-record-list">
             {sortedTags.length ? (
               sortedTags.map((item) => (
                 <button key={item.id} type="button" onClick={() => jumpToTime(item.time)}>
@@ -1009,7 +1009,7 @@ export default function PodcastReaderPage() {
             </div>
             <section>
               <h3>划线收藏</h3>
-              <div className="learning-full-list">
+              <div className="learning-full-list highlight-full-list">
                 {sortedHighlights.length ? (
                   sortedHighlights.map((item) => (
                     <button
@@ -1031,7 +1031,7 @@ export default function PodcastReaderPage() {
             </section>
             <section>
               <h3>灵感标签</h3>
-              <div className="learning-full-list">
+              <div className="learning-full-list tag-full-list">
                 {sortedTags.length ? (
                   sortedTags.map((item) => (
                     <button
@@ -1215,30 +1215,38 @@ function renderAnnotatedText(
   const sectionItems = items.filter((item) => item.time === time && text.includes(item.text));
   if (!sectionItems.length) return text;
 
-  const groupedItems = new Map<string, LearningItem[]>();
-  for (const item of sectionItems) {
-    const key = item.text;
-    groupedItems.set(key, [...(groupedItems.get(key) ?? []), item]);
-  }
-  const sortedItems = [...groupedItems.entries()]
-    .map(([itemText, group]) => ({ itemText, group, start: text.indexOf(itemText) }))
-    .filter((item) => item.start !== -1)
-    .sort((a, b) => a.start - b.start);
+  const positionedItems = sectionItems
+    .map((item) => {
+      const start = text.indexOf(item.text);
+      return start === -1 ? null : { item, start, end: start + item.text.length };
+    })
+    .filter((item): item is { item: LearningItem; start: number; end: number } => Boolean(item));
+  if (!positionedItems.length) return text;
+
+  const boundaries = [...new Set([0, text.length, ...positionedItems.flatMap((item) => [item.start, item.end])])]
+    .sort((a, b) => a - b);
   const nodes: ReactNode[] = [];
-  let cursor = 0;
 
-  for (const itemGroup of sortedItems) {
-    const start = text.indexOf(itemGroup.itemText, cursor);
-    if (start < cursor || start === -1) continue;
-    if (start > cursor) nodes.push(text.slice(cursor, start));
+  for (let index = 0; index < boundaries.length - 1; index += 1) {
+    const start = boundaries[index];
+    const end = boundaries[index + 1];
+    const segmentText = text.slice(start, end);
+    if (!segmentText) continue;
 
-    const highlight = itemGroup.group.find((item) => item.type === "highlight");
-    const tags = itemGroup.group.filter((item) => item.type === "tag");
-    const primaryItem = highlight ?? tags[0];
+    const coveringItems = positionedItems.filter((positioned) => positioned.start < end && positioned.end > start);
+    if (!coveringItems.length) {
+      nodes.push(segmentText);
+      continue;
+    }
+
+    const highlight = coveringItems.find((positioned) => positioned.item.type === "highlight")?.item;
+    const tags = coveringItems.filter((positioned) => positioned.item.type === "tag");
+    const endingTags = tags.filter((positioned) => positioned.end === end).map((positioned) => positioned.item);
+    const primaryItem = highlight ?? tags[0]?.item;
     const hasTags = tags.length > 0;
     const content = highlight ? (
       <mark
-        className="learning-highlight"
+        className={hasTags ? "learning-highlight learning-tag-text" : "learning-highlight"}
         role="button"
         tabIndex={0}
         onClick={(event) => onOpenItem(highlight, event.currentTarget)}
@@ -1246,28 +1254,28 @@ function renderAnnotatedText(
           if (event.key === "Enter" || event.key === " ") onOpenItem(highlight, event.currentTarget);
         }}
       >
-        {itemGroup.itemText}
+        {segmentText}
       </mark>
     ) : hasTags ? (
       <span
         className="learning-tag-text"
         role="button"
         tabIndex={0}
-        onClick={() => onOpenTag(tags[0])}
+        onClick={() => onOpenTag(tags[0].item)}
         onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") onOpenTag(tags[0]);
+          if (event.key === "Enter" || event.key === " ") onOpenTag(tags[0].item);
         }}
       >
-        {itemGroup.itemText}
+        {segmentText}
       </span>
     ) : (
-      itemGroup.itemText
+      segmentText
     );
 
     nodes.push(
-      <span className={tags.length ? "learning-tag-anchor" : undefined} key={primaryItem.id}>
+      <span className={hasTags ? "learning-tag-anchor" : undefined} key={`${primaryItem.id}-${start}-${end}`}>
         {content}
-        {tags.map((tagItem) => (
+        {endingTags.map((tagItem) => (
           <button
             className="learning-tag-symbol"
             key={tagItem.id}
@@ -1280,10 +1288,8 @@ function renderAnnotatedText(
         ))}
       </span>,
     );
-    cursor = start + itemGroup.itemText.length;
   }
 
-  if (cursor < text.length) nodes.push(text.slice(cursor));
   return nodes;
 }
 
