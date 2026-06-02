@@ -2015,8 +2015,8 @@ button {
 }
 
 .learning-record-list button:hover {
-  border-color: rgba(142, 99, 181, 0.22);
-  background: rgba(217, 183, 244, 0.1);
+  border-color: rgba(47, 122, 92, 0.26);
+  background: rgba(143, 214, 179, 0.12);
 }
 
 .learning-record-list span {
@@ -2024,32 +2024,10 @@ button {
   margin: 0 7px 0 0;
   border-radius: 999px;
   padding: 2px 7px;
-  color: #65407f;
-  background: rgba(217, 183, 244, 0.18);
-  font-size: 11px;
-  font-weight: 950;
-}
-
-.highlight-record-list button:hover {
-  border-color: rgba(180, 133, 24, 0.26);
-  background: rgba(255, 226, 122, 0.12);
-}
-
-.highlight-record-list span,
-.highlight-full-list span {
-  color: #8a6218;
-  background: #fff1a8;
-}
-
-.tag-record-list button:hover {
-  border-color: rgba(47, 122, 92, 0.26);
-  background: rgba(143, 214, 179, 0.12);
-}
-
-.tag-record-list span,
-.tag-full-list span {
   color: #2f7a5c;
   background: #eaf8f1;
+  font-size: 11px;
+  font-weight: 950;
 }
 
 .note-composer {
@@ -2177,8 +2155,8 @@ button {
 }
 
 .learning-full-list button:hover {
-  border-color: rgba(142, 99, 181, 0.22);
-  background: rgba(217, 183, 244, 0.1);
+  border-color: rgba(47, 122, 92, 0.24);
+  background: rgba(143, 214, 179, 0.1);
 }
 
 .learning-full-list span {
@@ -2186,20 +2164,10 @@ button {
   margin: 0 8px 0 0;
   border-radius: 999px;
   padding: 2px 8px;
-  color: #65407f;
-  background: rgba(217, 183, 244, 0.18);
+  color: #2f7a5c;
+  background: #eaf8f1;
   font-size: 12px;
   font-weight: 950;
-}
-
-.highlight-full-list button:hover {
-  border-color: rgba(180, 133, 24, 0.24);
-  background: rgba(255, 226, 122, 0.1);
-}
-
-.tag-full-list button:hover {
-  border-color: rgba(47, 122, 92, 0.24);
-  background: rgba(143, 214, 179, 0.1);
 }
 
 .note-full-list article {
