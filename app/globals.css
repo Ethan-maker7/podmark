@@ -1600,7 +1600,7 @@ button {
 .learning-tag-text {
   text-decoration-line: underline;
   text-decoration-style: wavy;
-  text-decoration-color: #8fd6b3;
+  text-decoration-color: rgba(229, 181, 50, 0.82);
   text-decoration-thickness: 1.4px;
   text-underline-offset: 0.22em;
   cursor: pointer;
@@ -1611,26 +1611,26 @@ button {
   align-items: center;
   justify-content: center;
   margin: 0 0.18em;
-  border: 1px solid rgba(47, 122, 92, 0.18);
+  border: 1px solid rgba(142, 99, 181, 0.18);
   border-radius: 999px;
   padding: 0.04em 0.22em;
-  color: #2f7a5c;
+  color: #8e63b5;
   background:
-    linear-gradient(180deg, rgba(255, 253, 252, 0.94), rgba(234, 248, 241, 0.86)),
-    rgba(143, 214, 179, 0.18);
+    linear-gradient(180deg, rgba(255, 253, 252, 0.92), rgba(245, 232, 255, 0.78)),
+    rgba(217, 183, 244, 0.24);
   font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
   font-size: 0.82em;
   font-weight: 950;
   line-height: 1.05;
   vertical-align: 0.06em;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(47, 122, 92, 0.12);
+  box-shadow: 0 1px 4px rgba(142, 99, 181, 0.14);
 }
 
 .learning-tag-symbol:hover {
   color: white;
-  border-color: rgba(47, 122, 92, 0.46);
-  background: #2f7a5c;
+  border-color: rgba(142, 99, 181, 0.5);
+  background: #8e63b5;
 }
 
 .selection-toolbar {
@@ -1688,7 +1688,7 @@ button {
 
 .tag-dialog-head span {
   display: block;
-  color: #2f7a5c;
+  color: #8e63b5;
   font-size: 12px;
   font-weight: 950;
 }
@@ -1697,7 +1697,7 @@ button {
   display: -webkit-box;
   overflow: hidden;
   margin: 14px 0 0;
-  color: rgba(62, 71, 66, 0.82);
+  color: rgba(67, 62, 58, 0.72);
   font-family: Literata, serif;
   font-size: 14px;
   line-height: 1.6;
@@ -1708,7 +1708,7 @@ button {
 .tag-dialog input {
   margin-top: 16px;
   width: 100%;
-  border: 1px solid rgba(47, 122, 92, 0.22);
+  border: 1px solid rgba(142, 99, 181, 0.22);
   border-radius: 14px;
   padding: 14px 15px;
   color: #2b202b;
@@ -1718,8 +1718,8 @@ button {
 }
 
 .tag-dialog input:focus {
-  border-color: rgba(47, 122, 92, 0.48);
-  box-shadow: 0 0 0 3px rgba(143, 214, 179, 0.2);
+  border-color: rgba(142, 99, 181, 0.52);
+  box-shadow: 0 0 0 3px rgba(217, 183, 244, 0.22);
 }
 
 .tag-dialog-actions {
@@ -1778,8 +1778,8 @@ button {
 
 .tag-picker button {
   padding: 6px 9px;
-  color: #2f7a5c;
-  background: rgba(143, 214, 179, 0.16);
+  color: #65407f;
+  background: rgba(217, 183, 244, 0.14);
   white-space: nowrap;
 }
 
@@ -2015,8 +2015,8 @@ button {
 }
 
 .learning-record-list button:hover {
-  border-color: rgba(47, 122, 92, 0.26);
-  background: rgba(143, 214, 179, 0.12);
+  border-color: rgba(142, 99, 181, 0.32);
+  background: rgba(217, 183, 244, 0.14);
 }
 
 .learning-record-list span {
@@ -2024,8 +2024,8 @@ button {
   margin: 0 7px 0 0;
   border-radius: 999px;
   padding: 2px 7px;
-  color: #2f7a5c;
-  background: #eaf8f1;
+  color: #65407f;
+  background: rgba(217, 183, 244, 0.2);
   font-size: 11px;
   font-weight: 950;
 }
@@ -2155,8 +2155,8 @@ button {
 }
 
 .learning-full-list button:hover {
-  border-color: rgba(47, 122, 92, 0.24);
-  background: rgba(143, 214, 179, 0.1);
+  border-color: rgba(142, 99, 181, 0.32);
+  background: rgba(217, 183, 244, 0.12);
 }
 
 .learning-full-list span {
@@ -2164,8 +2164,8 @@ button {
   margin: 0 8px 0 0;
   border-radius: 999px;
   padding: 2px 8px;
-  color: #2f7a5c;
-  background: #eaf8f1;
+  color: #65407f;
+  background: rgba(217, 183, 244, 0.2);
   font-size: 12px;
   font-weight: 950;
 }
