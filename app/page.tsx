@@ -10,6 +10,25 @@ import { SHOWCASE_EPISODE_ID } from "@/lib/showcase";
 
 const showcaseEpisodeId = SHOWCASE_EPISODE_ID;
 
+const sampleEpisodeLinks = [
+  {
+    label: "随机波动 · 长播客 Demo",
+    url: "https://www.xiaoyuzhoufm.com/episode/698bff878e1bab2654eeb1f7",
+  },
+  {
+    label: "凹凸电波 · 对谈样本",
+    url: "https://www.xiaoyuzhoufm.com/episode/69ae5d305b2d0ed06915ab0e",
+  },
+  {
+    label: "商业访谈录 · 长播客样本",
+    url: "https://www.xiaoyuzhoufm.com/episode/69f3857a5c60a99573fea0c2",
+  },
+  {
+    label: "硅谷101 · 中英混杂样本",
+    url: "https://www.xiaoyuzhoufm.com/episode/6a13923cfe904f3873c51d2b",
+  },
+];
+
 type ParseState =
   | { status: "idle" }
   | { status: "loading" }
@@ -20,6 +39,8 @@ export default function HomePage() {
   const router = useRouter();
   const [url, setUrl] = useState("");
   const [parseState, setParseState] = useState<ParseState>({ status: "idle" });
+  const [showPortfolioNotice, setShowPortfolioNotice] = useState(false);
+  const [showSampleLinks, setShowSampleLinks] = useState(false);
 
   async function handleParse() {
     const trimmedUrl = url.trim();
@@ -46,15 +67,17 @@ export default function HomePage() {
         throw new Error(data.error ?? "暂时无法识别这个链接。");
       }
 
-      if (!data.episode.title || !data.episode.audioUrl) {
+      const parsedEpisode = data.episode as ParsedEpisode;
+
+      if (!parsedEpisode.title || !parsedEpisode.audioUrl) {
         throw new Error(
-          data.episode.title
+          parsedEpisode.title
             ? "我们找到了这期播客，但没有在页面里找到可读取的音频地址。"
             : "我们打开了这个链接，但没有读到清晰的播客标题和音频信息。",
         );
       }
 
-      setParseState({ status: "success", episode: data.episode });
+      setParseState({ status: "success", episode: parsedEpisode });
     } catch (error) {
       setParseState({
         status: "error",
@@ -67,6 +90,11 @@ export default function HomePage() {
   }
 
   function enterLearningPage(episode: ParsedEpisode, autoGenerate = false) {
+    if (autoGenerate) {
+      setShowPortfolioNotice(true);
+      return;
+    }
+
     window.sessionStorage.setItem(LAST_PARSED_EPISODE_KEY, JSON.stringify(episode));
     if (episode.episodeId) {
       window.localStorage.setItem(RECENT_READING_EPISODE_KEY, episode.episodeId);
@@ -82,6 +110,7 @@ export default function HomePage() {
     window.sessionStorage.removeItem(AUTO_GENERATE_ARTICLE_KEY);
     router.push(`/podcasts/${showcaseEpisodeId}`);
   }
+
 
   return (
     <main className="sanctuary-page home-v3">
@@ -122,7 +151,10 @@ export default function HomePage() {
               <Link2 size={15} />
               粘贴播客链接
             </span>
-            <button onClick={enterShowcaseEpisode}>示例演示</button>
+            <div className="composer-v3-actions">
+              <button onClick={() => setShowSampleLinks(true)}>播客链接示例</button>
+              <button onClick={enterShowcaseEpisode}>查看示例文章</button>
+            </div>
           </div>
           <div className="composer-v3-row">
             <input
@@ -146,7 +178,7 @@ export default function HomePage() {
               <ArrowRight size={16} />
             </button>
           </div>
-          <div className="composer-v3-footnote">无需登录 · 本地存储 · 即刻转换</div>
+          <div className="composer-v3-footnote">无需登录 · 本地存储 · 可先查看示例文章</div>
         </div>
 
         {parseState.status === "loading" ? (
@@ -196,6 +228,52 @@ export default function HomePage() {
               <span>解析失败 · 信息未获取</span>
               <h2>未找到可用的播客内容</h2>
               <p>{parseState.message}</p>
+            </div>
+          </div>
+        ) : null}
+
+        {showPortfolioNotice ? (
+          <div className="portfolio-modal-backdrop" role="presentation" onClick={() => setShowPortfolioNotice(false)}>
+            <div className="portfolio-modal" role="dialog" aria-modal="true" aria-label="作品演示说明" onClick={(event) => event.stopPropagation()}>
+              <button className="portfolio-modal-close" aria-label="关闭" onClick={() => setShowPortfolioNotice(false)}>
+                ×
+              </button>
+              <span>作品演示说明</span>
+              <h2>当前作品仅提供示例体验</h2>
+              <p>真实产品链路已跑通。示例文章已内置；产品需用户自行配置 API Key 后再进行真实解析。</p>
+              <div className="portfolio-modal-actions">
+                <button onClick={enterShowcaseEpisode}>查看示例文章</button>
+                <button onClick={() => setShowPortfolioNotice(false)}>我知道了</button>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {showSampleLinks ? (
+          <div className="portfolio-modal-backdrop" role="presentation" onClick={() => setShowSampleLinks(false)}>
+            <div className="portfolio-modal sample-links-modal" role="dialog" aria-modal="true" aria-label="播客链接示例" onClick={(event) => event.stopPropagation()}>
+              <button className="portfolio-modal-close" aria-label="关闭" onClick={() => setShowSampleLinks(false)}>
+                ×
+              </button>
+              <span>播客链接示例</span>
+              <h2>可用于真实解析测试的播客链接</h2>
+              <p>作品集版本暂时关闭真实调用。点击任意样例可填入输入框，后续配置 API Key 后即可恢复解析能力。</p>
+              <div className="sample-link-list">
+                {sampleEpisodeLinks.map((item) => (
+                  <button
+                    key={item.url}
+                    onClick={() => {
+                      setUrl(item.url);
+                      setParseState({ status: "idle" });
+                      setShowSampleLinks(false);
+                    }}
+                  >
+                    <strong>{item.label}</strong>
+                    <small>{item.url}</small>
+                    <em>填入输入框</em>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         ) : null}
