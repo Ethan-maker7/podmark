@@ -143,7 +143,7 @@ export default function HomePage() {
           <br />
           <span>worth remembering.</span>
         </h1>
-        <p>把一集播客整理成可以阅读、标注和收藏的文章。</p>
+        <p>把一集小宇宙播客整理成可以阅读、标注和收藏的文章。</p>
 
         <div className="url-composer-v3">
           <div className="composer-v3-label">
@@ -238,12 +238,12 @@ export default function HomePage() {
               <button className="portfolio-modal-close" aria-label="关闭" onClick={() => setShowPortfolioNotice(false)}>
                 ×
               </button>
-              <span>作品演示说明</span>
+              <span>产品说明</span>
               <h2>当前作品仅提供示例体验</h2>
-              <p>真实产品链路已跑通。示例文章已内置；产品需用户自行配置 API Key 后再进行真实解析。</p>
+              <p>当前产品仅提供示例，链路已跑通；后续需用户自行配置 API Key 使用。</p>
               <div className="portfolio-modal-actions">
                 <button onClick={enterShowcaseEpisode}>查看示例文章</button>
-                <button onClick={() => setShowPortfolioNotice(false)}>我知道了</button>
+                <button onClick={() => setShowPortfolioNotice(false)}>返回首页</button>
               </div>
             </div>
           </div>
@@ -256,8 +256,8 @@ export default function HomePage() {
                 ×
               </button>
               <span>播客链接示例</span>
-              <h2>可用于真实解析测试的播客链接</h2>
-              <p>作品集版本暂时关闭真实调用。点击任意样例可填入输入框，后续配置 API Key 后即可恢复解析能力。</p>
+              <h2>播客链接示例</h2>
+              <p>支持所有小宇宙链接，此处仅为部分案例。</p>
               <div className="sample-link-list">
                 {sampleEpisodeLinks.map((item) => (
                   <button
@@ -270,7 +270,6 @@ export default function HomePage() {
                   >
                     <strong>{item.label}</strong>
                     <small>{item.url}</small>
-                    <em>填入输入框</em>
                   </button>
                 ))}
               </div>
