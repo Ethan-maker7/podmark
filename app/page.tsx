@@ -12,19 +12,19 @@ const showcaseEpisodeId = SHOWCASE_EPISODE_ID;
 
 const sampleEpisodeLinks = [
   {
-    label: "随机波动 · 长播客 Demo",
+    label: "随机波动",
     url: "https://www.xiaoyuzhoufm.com/episode/698bff878e1bab2654eeb1f7",
   },
   {
-    label: "凹凸电波 · 对谈样本",
+    label: "凹凸电波",
     url: "https://www.xiaoyuzhoufm.com/episode/69ae5d305b2d0ed06915ab0e",
   },
   {
-    label: "商业访谈录 · 长播客样本",
+    label: "商业访谈录",
     url: "https://www.xiaoyuzhoufm.com/episode/69f3857a5c60a99573fea0c2",
   },
   {
-    label: "硅谷101 · 中英混杂样本",
+    label: "硅谷101",
     url: "https://www.xiaoyuzhoufm.com/episode/6a13923cfe904f3873c51d2b",
   },
 ];
@@ -238,8 +238,7 @@ export default function HomePage() {
               <button className="portfolio-modal-close" aria-label="关闭" onClick={() => setShowPortfolioNotice(false)}>
                 ×
               </button>
-              <span>产品说明</span>
-              <h2>当前作品仅提供示例体验</h2>
+              <h2>产品说明</h2>
               <p>当前产品仅提供示例，链路已跑通；后续需用户自行配置 API Key 使用。</p>
               <div className="portfolio-modal-actions">
                 <button onClick={enterShowcaseEpisode}>查看示例文章</button>
@@ -255,7 +254,6 @@ export default function HomePage() {
               <button className="portfolio-modal-close" aria-label="关闭" onClick={() => setShowSampleLinks(false)}>
                 ×
               </button>
-              <span>播客链接示例</span>
               <h2>播客链接示例</h2>
               <p>支持所有小宇宙链接，此处仅为部分案例。</p>
               <div className="sample-link-list">
